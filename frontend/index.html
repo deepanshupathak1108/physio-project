@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhysioCare - Modern Clinic Management</title>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-hover: rgba(30, 41, 59, 0.9);
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --secondary: #10b981;
+      --accent: #8b5cf6;
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.08);
+      --sidebar-w: 260px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      background-image:
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Typography */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .text-primary {
+      color: var(--primary);
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .text-muted {
+      color: var(--text-muted);
+    }
+
+    /* App Layout */
+    .app-layout {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-w);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 40px;
+    }
+
+    .brand-icon {
+      color: var(--primary);
+      width: 32px;
+      height: 32px;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-links li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .nav-links li:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .nav-links li.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      padding: 24px 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .content-body {
+      padding: 40px;
+      flex: 1;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Cards & Glassmorphism */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      transition: 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Dashboard Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .stat-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--primary);
+    }
+
+    .stat-icon.green {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--secondary);
+    }
+
+    .stat-info h4 {
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .stat-info .value {
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    /* Forms & Inputs */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 15px;
+      transition: 0.3s;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #0ea5e9);
+      color: white;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-icon {
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-icon.view-btn {
+      color: #38bdf8;
+    }
+
+    .btn-icon.edit-btn {
+      color: #a78bfa;
+    }
+
+    .btn-icon.delete-btn {
+      color: #f87171;
+    }
+
+    /* Patient List */
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .search-wrapper i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .search-wrapper input {
+      padding-left: 48px;
+    }
+
+    .patient-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 16px;
+    }
+
+    .patient-item {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.3s;
+    }
+
+    .patient-item:hover {
+      background: rgba(30, 41, 59, 0.8);
+      transform: scale(1.02);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .patient-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .patient-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .p-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .p-phone {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-sm {
+      width: 16px;
+      height: 16px;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    /* Detail & Edit Views */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      margin-bottom: 24px;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      color: var(--text-main);
+    }
+
+    .edit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      border-radius: 16px;
+    }
+
+    /* Specific components */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.1);
+      color: #60a5fa;
+    }
+
+    .timeline {
+      border-left: 2px dashed rgba(255, 255, 255, 0.15);
+      margin-left: 12px;
+      padding-left: 24px;
+      margin-top: 16px;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -32px;
+      top: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 2px solid var(--bg-card);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+
+    .timeline-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .timeline-content {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    /* Images Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .img-card {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+      aspect-ratio: 1;
+    }
+
+    .img-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .img-card:hover img {
+      transform: scale(1.1);
+      filter: brightness(1.1);
+    }
+
+    .img-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(4px);
+    }
+
+    /* File Upload custom */
+    input[type="file"] {
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+
+    input[type="file"]::file-selector-button {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 12px;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Toast */
+    #toast-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toast {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 16px 24px;
+      border-radius: 14px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      border-left: 4px solid var(--primary);
+    }
+
+    .toast.success {
+      border-left-color: var(--secondary);
+    }
+
+    .toast.error {
+      border-left-color: var(--danger);
+    }
+
+    .toast i {
+      width: 20px;
+      height: 20px;
+    }
+
+    .toast.success i {
+      color: var(--secondary);
+    }
+
+    .toast.error i {
+      color: var(--danger);
+    }
+
+    @keyframes slideInToast {
+      from {
+        transform: translateX(110%) scale(0.9);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOutToast {
+      from {
+        transform: translateX(0) scale(1.0);
+        opacity: 1;
+        margin-bottom: 0;
+      }
+
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+        margin-bottom: -60px;
+      }
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: var(--bg-dark);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 32px;
+      width: 90%;
+      max-width: 500px;
+      transform: translateY(30px) scale(0.95);
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-close {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid transparent;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: rotate(90deg);
+    }
+
+    /* Confirmation Modal Layout */
+    .confirm-content {
+      text-align: center;
+    }
+
+    .confirm-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .confirm-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    @media(max-width: 768px) {
+      .app-layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand {
+        margin-bottom: 0;
+        font-size: 20px;
+      }
+
+      .nav-links {
+        flex-direction: row;
+      }
+
+      .nav-links li span {
+        display: none;
+      }
+
+      /* hide text on mobile */
+      .content-body {
+        padding: 20px;
+      }
+
+      .topbar {
+        padding: 16px 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .patient-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i data-lucide="activity" class="brand-icon"></i>
+        <span>Physio<span class="text-primary">Care</span></span>
+      </div>
+      <ul class="nav-links">
+        <li class="active" onclick="switchTab('dashboard')" id="nav-dashboard">
+          <i data-lucide="layout-dashboard"></i> <span>Dashboard</span>
+        </li>
+        <li onclick="switchTab('patients')" id="nav-patients">
+          <i data-lucide="users"></i> <span>Patients</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <header class="topbar">
+        <h2 id="page-title">Dashboard Overview</h2>
+        <div class="user-profile" style="display:flex; align-items:center; gap: 12px;">
+          <div style="text-align: right; display: none; margin-right: 8px;" id="desk-profile-name">
+            <p style="font-size: 14px; font-weight: 600;">Dr. Physiotherapist</p>
+            <p style="font-size: 12px; color: var(--text-muted);">Admin Area</p>
+          </div>
+          <div class="avatar admin-avatar"
+            style="width: 44px; height: 44px; border-radius: 50%; font-size: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary));">
+            DR</div>
+        </div>
+      </header>
+
+      <div class="content-body">
+
+        <!-- DASHBOARD PAGE -->
+        <div id="dashboardPage" class="page active">
+          <div class="stats-grid">
+            <div class="glass-card stat-card">
+              <div class="stat-icon"><i data-lucide="users" size="32"></i></div>
+              <div class="stat-info">
+                <h4>Total Patients</h4>
+                <div class="value" id="totalPatients">0</div>
+              </div>
+            </div>
+            <div class="glass-card stat-card">
+              <div class="stat-icon green"><i data-lucide="indian-rupee" size="32"></i></div>
+              <div class="stat-info">
+                <h4>Total Revenue (₹)</h4>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <div class="value text-gradient" id="dashboardIncome" style="display: none;">0</div>
+                  <button class="btn btn-secondary" id="checkTotalBtn" style="padding: 6px 12px; font-size: 13px;"
+                    onclick="checkTotalRevenue()">Check Total</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card" style="margin-top: 24px;">
+            <div class="header-actions">
+              <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="bar-chart-2"
+                  class="text-primary"></i> Revenue History</h3>
+              <div style="display:flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;"
+                  onclick="getMonthly('this')">This Month</button>
+                <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;"
+                  onclick="getMonthly('prev')">Last Month</button>
+                <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;"
+                  onclick="getMonthly('six')">Last 6 Months</button>
+                <button class="btn btn-danger" style="padding: 8px 16px; font-size: 14px;" onclick="resetRevenue()"><i
+                    data-lucide="refresh-cw" size="16"></i> Reset All</button>
+              </div>
+            </div>
+            <div id="paymentResult"
+              style="padding: 24px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.15); transition: 0.3s; min-height: 120px; display: flex; align-items: center; justify-content: center;">
+              <p class="text-muted" style="display: flex; align-items: center; gap: 8px;"><i
+                  data-lucide="mouse-pointer-click" size="18"></i> Select a reporting period above to view details</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PATIENTS PAGE -->
+        <div id="patientsPage" class="page">
+          <div class="header-actions">
+            <div class="search-wrapper">
+              <i data-lucide="search" size="18"></i>
+              <input type="text" id="search" placeholder="Search patients by name or phone..." oninput="loadPatients()">
+            </div>
+            <button class="btn btn-primary" onclick="openAddModal()"><i data-lucide="user-plus"></i> Add
+              Patient</button>
+          </div>
+
+          <ul id="patientList" class="patient-grid" style="list-style: none;">
+            <!-- Rendered by JS -->
+          </ul>
+        </div>
+
+        <!-- VIEW PATIENT DETAIL PAGE -->
+        <div id="viewPage" class="page">
+          <div class="back-link" onclick="switchTab('patients')"><i data-lucide="arrow-left"></i> Back to Patients</div>
+          <div id="patientDetailContent">
+            <!-- Content injected here -->
+          </div>
+        </div>
+
+        <!-- EDIT PATIENT PAGE -->
+        <div id="editPage" class="page">
+          <div class="back-link" onclick="switchTab('patients')"><i data-lucide="arrow-left"></i> Back to Patients</div>
+          <div class="glass-card"
+            style="margin-bottom: 24px; background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6));">
+            <h2 style="font-weight: 500; font-size: 24px; display: flex; align-items: center; gap: 12px;">Manage
+              Interventions for <span class="text-gradient" style="font-weight: 800;" id="editPatientName"></span></h2>
+          </div>
+
+          <div class="edit-grid">
+            <!-- Add Treatment -->
+            <div class="glass-card">
+              <h3 style="margin-bottom: 20px; display:flex; align-items:center; gap:10px;"><i data-lucide="activity"
+                  class="text-primary"></i> Add Treatment</h3>
+              <div class="form-group">
+                <label>Specialized Treatment</label>
+                <select id="edit_treatment">
+                  <option value="">Select Treatment Modality</option>
+                  <option>Physiotherapy Session</option>
+                  <option>Electrotherapy & TENS</option>
+                  <option>Exercise Therapy</option>
+                  <option>Manual & Manipulative Therapy</option>
+                  <option>Post-Op Rehabilitation</option>
+                  <option>Dry Needling</option>
+                  <option>Cupping Therapy</option>
+                  <option>General Consultation</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Clinical Notes</label>
+                <input type="text" id="edit_notes" placeholder="Session details, improvements, reps...">
+              </div>
+              <button class="btn btn-primary" style="width:100%; margin-top: 8px;" onclick="addTreatmentEdit()">Save
+                Treatment Session</button>
+            </div>
+
+            <!-- Add Payment -->
+            <div class="glass-card">
+              <h3 style="margin-bottom: 20px; display:flex; align-items:center; gap:10px;"><i data-lucide="credit-card"
+                  style="color:var(--secondary)"></i> Record Payment</h3>
+              <div class="form-group">
+                <label>Amount Recieved (₹)</label>
+                <input type="number" id="edit_amount" placeholder="e.g. 1500">
+              </div>
+              <div class="form-group">
+                <label>Payment Method (Notes)</label>
+                <input type="text" id="edit_pay_method" placeholder="Cash, UPI, Card...">
+              </div>
+              <button class="btn btn-primary" style="width:100%; margin-top: 8px;" onclick="addPaymentEdit()">Record
+                Transaction</button>
+            </div>
+
+            <!-- Upload Image -->
+            <div class="glass-card">
+              <h3 style="margin-bottom: 20px; display:flex; align-items:center; gap:10px;"><i data-lucide="image"
+                  style="color:var(--accent)"></i> Medical Imaging & Proof</h3>
+              <div class="form-group">
+                <label>Document Category</label>
+                <select id="edit_imgType">
+                  <option value="X-Ray Scan">X-Ray Scan</option>
+                  <option value="MRI Scan">MRI Scan</option>
+                  <option value="Before Treatment">Before Treatment State</option>
+                  <option value="After Treatment">After Treatment Progress</option>
+                  <option value="Prescription">Prescription</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Select Media File (.jpg, .png)</label>
+                <input type="file" id="edit_file" accept="image/*">
+              </div>
+              <button class="btn btn-primary" style="width:100%; margin-top: 8px;" onclick="uploadImageEdit()">Upload
+                Securely</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal for Add Patient -->
+  <div class="modal-overlay" id="addPatientModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title"><i data-lucide="user-plus" class="text-primary"></i> New Registration</h3>
+        <button class="modal-close" onclick="closeAddModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="form-group">
+        <label>Full Patient Name <span class="text-danger">*</span></label>
+        <input type="text" id="add_name" placeholder="E.g. John Doe">
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+        <div class="form-group">
+          <label>Age</label>
+          <input type="number" id="add_age" placeholder="E.g. 45">
+        </div>
+        <div class="form-group">
+          <label>Phone Number <span class="text-danger">*</span></label>
+          <input type="tel" id="add_phone" placeholder="10-digit mobile">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Chief Complaint / Medical History</label>
+        <input type="text" id="add_history" placeholder="Previous injuries, current pain area...">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top: 32px;">
+        <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="addPatient()"><i data-lucide="check"></i> Register Patient</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Confirm Delete -->
+  <div class="modal-overlay" id="deletePatientModal">
+    <div class="modal-content confirm-content">
+      <div class="confirm-icon">
+        <i data-lucide="alert-triangle" size="32"></i>
+      </div>
+      <h3 style="font-size: 24px; margin-bottom: 8px;">Delete Patient Record?</h3>
+      <p class="text-muted" style="line-height: 1.5;">You are about to permanently delete all data, treatments, and
+        images associated with this patient. This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" style="flex:1;" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" style="flex:1;" id="confirmDeleteBtn">Yes, Delete Data</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Make profile nav visible on larger screens
+    if (window.innerWidth > 768) {
+      document.getElementById('desk-profile-name').style.display = 'block';
+    }
+
+    // Initialize Icons
+    lucide.createIcons();
+
+    // --- STATE ---
+    let currentPatientId = "";
+    let patientToDeleteId = "";
+    const API = "http://localhost:5000";
+
+    // --- TOAST SYSTEM ---
+    function showToast(message, type = "success") {
+      let container = document.getElementById('toast-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+      }
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      let icon = type === 'success' ? 'check-circle' : 'alert-circle';
+      toast.innerHTML = `<i data-lucide="${icon}"></i> <span style="flex:1;">${message}</span>`;
+      container.appendChild(toast);
+      lucide.createIcons({ root: toast });
+
+      setTimeout(() => {
+        toast.style.animation = 'fadeOutToast 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
+
+    // --- NAVIGATION ---
+    function switchTab(tab) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+
+      if (tab === 'dashboard') {
+        document.getElementById('dashboardPage').classList.add('active');
+        document.getElementById('nav-dashboard').classList.add('active');
+        document.getElementById('page-title').innerText = "Dashboard Overview";
+        loadDashboard();
+      } else if (tab === 'patients') {
+        document.getElementById('patientsPage').classList.add('active');
+        document.getElementById('nav-patients').classList.add('active');
+        document.getElementById('page-title').innerText = "Patient Management";
+        loadPatients();
+      }
+    }
+
+    function openViewPage() {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('viewPage').classList.add('active');
+      document.getElementById('page-title').innerText = "Patient Medical Record";
+    }
+    function openEditPage(id, name) {
+      currentPatientId = id;
+      document.getElementById('editPatientName').innerText = name;
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('editPage').classList.add('active');
+      document.getElementById('page-title').innerText = "Intervention Management";
+    }
+
+    // --- DASHBOARD FUNCTIONS ---
+    async function loadDashboard() {
+      try {
+        let p = await fetch(`${API}/patients`);
+        let patients = await p.json();
+
+        document.getElementById('totalPatients').innerText = patients.length;
+        // hide revenue by default now 
+        document.getElementById('dashboardIncome').style.display = 'none';
+        document.getElementById('checkTotalBtn').style.display = 'block';
+      } catch (e) {
+        console.error("Dashboard backend issue:", e);
+      }
+    }
+    // Initial load
+    loadDashboard();
+
+    async function checkTotalRevenue() {
+      try {
+        let pay = await fetch(`${API}/total-payment`);
+        let payment = await pay.json();
+        document.getElementById('dashboardIncome').innerText = payment.total.toLocaleString();
+        document.getElementById('dashboardIncome').style.display = 'block';
+        document.getElementById('checkTotalBtn').style.display = 'none';
+      } catch (e) {
+        showToast("Failed to fetch total revenue", "error");
+      }
+    }
+
+    async function resetRevenue() {
+      if (!confirm("Are you sure you want to permanently reset all revenue and payments across all patients?")) return;
+      try {
+        await fetch(`${API}/reset-revenue`, { method: 'DELETE' });
+        showToast("All revenue data has been reset.");
+        document.getElementById('dashboardIncome').innerText = '0';
+        document.getElementById('paymentResult').innerHTML = `<p class="text-muted" style="display: flex; align-items: center; gap: 8px;"><i data-lucide="mouse-pointer-click" size="18"></i> Select a reporting period above to view details</p>`;
+      } catch (e) {
+        showToast("Error resetting revenue", "error");
+      }
+    }
+
+    async function getMonthly(type) {
+      try {
+        let res = await fetch(`${API}/monthly-payment/${type}`);
+        let data = await res.json();
+
+        let label = type === 'this' ? 'This Month' : type === 'prev' ? 'Last Month' : 'Last 6 Months';
+        document.getElementById('paymentResult').innerHTML = `
+      <div style="width: 100%; display:flex; justify-content:space-between; align-items:center; animation: fadeIn 0.4s;">
+        <div>
+          <p style="color:var(--text-muted); font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">${label} Revenue</p>
+          <h2 class="text-gradient" style="font-size:36px; margin-top:8px;">₹${data.total.toLocaleString()}</h2>
+        </div>
+        <div style="text-align:right;">
+          <p style="color:var(--text-muted); font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Total Visits</p>
+          <h3 style="font-size:28px; font-weight:800; margin-top:8px; color:#fff;">${data.count}</h3>
+        </div>
+      </div>
+    `;
+      } catch (e) {
+        showToast("Failed to fetch payments", "error");
+      }
+    }
+
+    // --- PATIENT LISTING ---
+    async function loadPatients() {
+      try {
+        let res = await fetch(`${API}/patients`);
+        let data = await res.json();
+
+        let list = document.getElementById('patientList');
+        let search = document.getElementById('search').value.toLowerCase();
+
+        list.innerHTML = "";
+
+        // allow searching by name or phone
+        let filtered = data.filter(p => (p.name && p.name.toLowerCase().includes(search)) || (p.phone && p.phone.includes(search)));
+
+        // Sorting by newest first mostly (assuming _id timestamp)
+        filtered.reverse();
+
+        if (filtered.length === 0) {
+          list.innerHTML = `
+        <div class="empty-state">
+          <i data-lucide="folder-search" class="empty-icon" style="opacity:0.3; width:80px; height:80px;"></i>
+          <h3 style="margin-bottom:8px;">No patients found</h3>
+          <p style="font-size:15px;">Check your search term or add a new patient to the system.</p>
+        </div>`;
+        } else {
+          filtered.forEach(p => {
+            let li = document.createElement('li');
+            li.className = 'patient-item';
+
+            const colors = [
+              'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+              'linear-gradient(135deg, #10b981, #059669)',
+              'linear-gradient(135deg, #f59e0b, #d97706)',
+              'linear-gradient(135deg, #ec4899, #be185d)'
+            ];
+            const hash = p.name ? p.name.charCodeAt(0) % colors.length : 0;
+            const bg = colors[hash];
+
+            li.innerHTML = `
+          <div class="patient-info">
+            <div class="avatar" style="background:${bg}; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">${p.name ? p.name.charAt(0).toUpperCase() : '?'}</div>
+            <div class="patient-details">
+              <span class="p-name">${p.name}</span>
+              <span class="p-phone"><i data-lucide="phone" class="icon-sm text-primary"></i> ${p.phone}</span>
+            </div>
+          </div>
+          <div class="action-btns">
+            <button class="btn-icon view-btn" onclick="viewPatient('${p._id}')" title="View Patient File"><i data-lucide="folder-open"></i></button>
+            <button class="btn-icon edit-btn" onclick="openEditPage('${p._id}', '${p.name}')" title="Add Treatments or Payments"><i data-lucide="plus-circle"></i></button>
+            <button class="btn-icon delete-btn" onclick="requestDelete('${p._id}')" title="Delete Patient"><i data-lucide="trash-2"></i></button>
+          </div>
+        `;
+            list.appendChild(li);
+          });
+        }
+        lucide.createIcons();
+      } catch (e) {
+        document.getElementById('patientList').innerHTML = `<div class="empty-state"><i data-lucide="wifi-off" class="empty-icon"></i><h4>Backend Connection Error</h4><p>Could not connect to localhost:5000 server.</p></div>`;
+        lucide.createIcons();
+      }
+    }
+
+    // --- ADD PATIENT MODAL ---
+    function openAddModal() { document.getElementById('addPatientModal').classList.add('active'); }
+    function closeAddModal() {
+      document.getElementById('addPatientModal').classList.remove('active');
+      document.getElementById('add_name').value = '';
+      document.getElementById('add_age').value = '';
+      document.getElementById('add_phone').value = '';
+      document.getElementById('add_history').value = '';
+    }
+
+    async function addPatient() {
+      let name = document.getElementById('add_name').value;
+      let age = document.getElementById('add_age').value;
+      let phone = document.getElementById('add_phone').value;
+      let history = document.getElementById('add_history').value;
+
+      if (!name || !phone) {
+        showToast("Name and Phone fields are required!", "error");
+        return;
+      }
+
+      // Custom button loading state could go here
+
+      try {
+        let res = await fetch(`${API}/add-patient`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, age, phone, medical_history: history })
+        });
+        let data = await res.json();
+
+        if (res.status === 400) { showToast(data.message, "error"); return; }
+
+        showToast("Patient Registered Successfully!");
+        closeAddModal();
+        loadPatients();
+        loadDashboard();
+      } catch (e) {
+        showToast("Server Error connecting to database", "error");
+      }
+    }
+
+    // --- DELETE PATIENT MODAL ---
+    function requestDelete(id) {
+      patientToDeleteId = id;
+      document.getElementById('deletePatientModal').classList.add('active');
+    }
+    function closeDeleteModal() {
+      document.getElementById('deletePatientModal').classList.remove('active');
+      patientToDeleteId = "";
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+      if (!patientToDeleteId) return;
+      const btn = document.getElementById('confirmDeleteBtn');
+      const ogText = btn.innerHTML;
+      btn.innerHTML = `<i data-lucide="loader-2" style="animation: spin 1s linear infinite; margin-right:8px;"></i> Deleting...`;
+
+      try {
+        await fetch(`${API}/delete-patient/${patientToDeleteId}`, { method: 'DELETE' });
+        showToast("Patient record and all associated data permanently removed.");
+        closeDeleteModal();
+        loadPatients();
+        loadDashboard();
+      } catch (e) {
+        showToast("Failed to delete from server. Check console.", "error");
+      } finally {
+        btn.innerHTML = ogText;
+      }
+    });
+
+    // --- VIEW PATIENT ---
+    async function viewPatient(id) {
+      openViewPage();
+      const container = document.getElementById('patientDetailContent');
+      container.innerHTML = `
+    <div style="text-align:center; padding:80px; display:flex; flex-direction:column; align-items:center; opacity:0.6;">
+      <i data-lucide="loader-2" style="width:48px; height:48px; color:var(--primary); animation: spin 1s linear infinite; margin-bottom:16px;"></i> 
+      <h3 style="color:var(--text-main);">Fetching Medical Records...</h3>
+    </div>`;
+      lucide.createIcons();
+
+      try {
+        let res = await fetch(`${API}/patient/${id}`);
+        let data = await res.json();
+        let pat = data.patient;
+
+        let html = `
+      <div class="glass-card" style="margin-bottom:24px; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:-20px; right:-20px; opacity:0.05; transform:rotate(-15deg);">
+          <i data-lucide="activity" style="width:200px; height:200px;"></i>
+        </div>
+        <div style="display:flex; align-items:center; gap:24px; position:relative; z-index:1;">
+          <div class="avatar" style="width:100px;height:100px;font-size:40px; box-shadow: 0 10px 30px rgba(59,130,246,0.3); background: linear-gradient(135deg, var(--primary), var(--accent));">${pat.name.charAt(0).toUpperCase()}</div>
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <h2 style="font-size:36px; margin-bottom: 8px;">${pat.name}</h2>
+                <button class="btn btn-primary" onclick="openEditPage('${pat._id}', '${pat.name}')"><i data-lucide="plus"></i> Add Intervention</button>
+            </div>
+            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top: 4px;">
+              <span class="badge"><i data-lucide="phone" class="icon-sm" style="margin-right:4px;"></i> ${pat.phone}</span>
+              <span class="badge" style="background:rgba(16,185,129,0.1); color:var(--secondary);"><i data-lucide="calendar" class="icon-sm" style="margin-right:4px;"></i> Age: ${pat.age || 'N/A'}</span>
+            </div>
+            ${pat.medical_history ? `
+              <div style="margin-top:16px; font-size:14px; background:rgba(0,0,0,0.3); border:1px solid var(--border); padding:12px 16px; border-radius:12px; display:inline-block;">
+                <h5 style="color:var(--text-muted); text-transform:uppercase; font-size:11px; letter-spacing:1px; margin-bottom:4px;">Clinical Complaint</h5>
+                <p>${pat.medical_history}</p>
+              </div>` : ''}
+          </div>
+        </div>
+      </div>
+      
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:24px;">
+        <!-- Treatments Timeline -->
+        <div class="glass-card">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+            <h3 style="display:flex; align-items:center; gap:8px;"><i data-lucide="file-pulse" class="text-primary"></i> Treatment Progress</h3>
+            <span style="font-size:13px; color:var(--text-muted); background: rgba(255,255,255,0.05); padding:4px 10px; border-radius:20px;">${(data.treatments || []).length} Sessions</span>
+          </div>
+          <div class="timeline">
+            ${(data.treatments || []).length ? data.treatments.reverse().map(t => `
+              <div class="timeline-item">
+                <div class="timeline-date">${t.date}</div>
+                <div class="timeline-content">
+                  <div style="font-weight:700; font-size:15px; color:var(--text-main); margin-bottom:6px;">${t.treatment}</div>
+                  ${t.notes ? `<div style="font-size:14px; color:var(--text-muted); line-height:1.5;">${t.notes}</div>` : ''}
+                </div>
+              </div>
+            `).join("") : '<div style="text-align:center; padding:30px; border:1px dashed var(--border); border-radius:12px;"><p class="text-muted">No treatments recorded yet.</p></div>'}
+          </div>
+        </div>
+        
+        <!-- Payments & Images stack -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <div class="glass-card">
+             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+              <h3 style="display:flex; align-items:center; gap:8px;"><i data-lucide="landmark" style="color:var(--secondary)"></i> Accounting</h3>
+              <span style="font-size:14px; font-weight:700; color:var(--secondary);">Total: ₹${(data.payments || []).reduce((s, p) => s + p.amount, 0).toLocaleString()}</span>
+            </div>
+            ${(data.payments || []).length ? `
+              <ul style="list-style:none;">
+                ${data.payments.reverse().map(p => `
+                  <li style="display:flex; justify-content:space-between; align-items:center; padding:16px; background:rgba(0,0,0,0.15); border-radius:12px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.03);">
+                    <div>
+                        <div style="font-weight:600;">₹${p.amount.toLocaleString()}</div>
+                        <div class="text-muted" style="font-size:12px; margin-top:2px;">${p.date.split(',')[0]}</div>
+                    </div>
+                    <div style="color:var(--secondary); background:rgba(16,185,129,0.1); padding:6px; border-radius:50%;"><i data-lucide="check" size="16"></i></div>
+                  </li>
+                `).join("")}
+              </ul>
+            ` : '<div style="text-align:center; padding:20px; border:1px dashed var(--border); border-radius:12px;"><p class="text-muted">No payments recorded.</p></div>'}
+          </div>
+          
+          <div class="glass-card">
+            <h3 style="display:flex; align-items:center; gap:8px; margin-bottom:20px;"><i data-lucide="clipboard-list" style="color:var(--accent)"></i> Medical Imaging</h3>
+            <div class="gallery">
+              ${(data.images || []).length ? data.images.map(img => `
+                <div class="img-card">
+                  <a href="${API}/uploads/${img.image_url}" target="_blank">
+                    <img src="${API}/uploads/${img.image_url}" alt="${img.type}" />
+                  </a>
+                  <div class="img-label">${img.type}</div>
+                </div>
+              `).join("") : '<div style="text-align:center; padding:30px; grid-column:1/-1; border:1px dashed var(--border); border-radius:12px;"><p class="text-muted">No imaging files attached.</p></div>'}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+        container.innerHTML = html;
+        lucide.createIcons({ root: container });
+      } catch (e) {
+        container.innerHTML = `<div class="empty-state"><i data-lucide="alert-circle" class="empty-icon text-danger"></i><h4>Failed to load detailed profile</h4><p>Ensure backend API is running properly.</p></div>`;
+        lucide.createIcons();
+      }
+    }
+
+    // --- EDIT/ADD ACTIONS ---
+    async function addTreatmentEdit() {
+      const treatment = document.getElementById('edit_treatment').value;
+      const notes = document.getElementById('edit_notes').value;
+      if (!treatment) { showToast("Please select a specific treatment modality", "error"); return; }
+
+      const btn = event.currentTarget;
+      const ogText = btn.innerHTML;
+      btn.innerHTML = `<i data-lucide="loader-2" style="animation: spin 1s linear infinite;"></i> Saving...`;
+
+      try {
+        await fetch(`${API}/add-treatment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ patient_id: currentPatientId, treatment, notes, date: new Date().toISOString() })
+        });
+        showToast(`Added ${treatment} session successfully`);
+        document.getElementById('edit_treatment').value = "";
+        document.getElementById('edit_notes').value = "";
+      } catch (e) { showToast("Error Adding Treatment", "error"); } finally {
+        btn.innerHTML = ogText;
+      }
+    }
+
+    async function addPaymentEdit() {
+      const amount = document.getElementById('edit_amount').value;
+      let methodNotes = document.getElementById('edit_pay_method').value;
+      if (!amount || amount <= 0) { showToast("Enter a valid numerical amount", "error"); return; }
+
+      const btn = event.currentTarget;
+      const ogText = btn.innerHTML;
+      btn.innerHTML = `<i data-lucide="loader-2" style="animation: spin 1s linear infinite;"></i> Processing...`;
+
+      try {
+        await fetch(`${API}/add-payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            patient_id: currentPatientId,
+            amount: Number(amount),
+            date: new Date().toISOString() + (methodNotes ? ` - ${methodNotes}` : "")
+          })
+        });
+        showToast(`Payment of ₹${amount} received!`);
+        document.getElementById('edit_amount').value = "";
+        document.getElementById('edit_pay_method').value = "";
+        loadDashboard(); // update totals behind scenes
+      } catch (e) { showToast("Error Recording Transaction", "error"); } finally {
+        btn.innerHTML = ogText;
+      }
+    }
+
+    async function uploadImageEdit() {
+      const fileInput = document.getElementById('edit_file');
+      const type = document.getElementById('edit_imgType').value;
+
+      if (!fileInput.files[0]) { showToast("Please select a file to upload!", "error"); return; }
+
+      const btn = event.currentTarget;
+      const ogText = btn.innerHTML;
+      btn.innerHTML = `<i data-lucide="loader-2" style="animation: spin 1s linear infinite;"></i> Uploading...`;
+
+      let formData = new FormData();
+      formData.append("image", fileInput.files[0]);
+      formData.append("type", type);
+
+      try {
+        await fetch(`${API}/upload/${currentPatientId}`, { method: 'POST', body: formData });
+        showToast(`Medical Document (${type}) uploaded securely`);
+        fileInput.value = "";
+      } catch (e) { showToast("File Upload failed. Ensure server accepts file sizes.", "error"); } finally {
+        btn.innerHTML = ogText;
+      }
+    }
+  </script>
+
+  <style>
+    /* extra fix for lucide to avoid flashing unstyled svg */
+    .lucide {
+      width: 1.25em;
+      height: 1.25em;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* Spin animation */
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</body>
+
+</html>
