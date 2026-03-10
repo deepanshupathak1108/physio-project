@@ -1,0 +1,27 @@
+services:
+  # Backend API Configuration
+  - type: web
+    name: physio-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    branch: main
+    envVars:
+      - key: MONGO_URI
+        value: mongodb://localhost:27017/physio # You will need to change this to MongoDB Atlas!
+      - key: PORT
+        value: 5000
+      
+  # Frontend Static Site Configuration
+  - type: web
+    name: physio-care-clinic
+    env: static
+    buildCommand: "" # No build step since it's just raw HTML/JS/CSS
+    staticPublishPath: ./frontend
+    branch: main
+    envVars:
+      - key: API_URL
+        fromService:
+          type: web
+          name: physio-backend
+          envVarKey: RENDER_EXTERNAL_URL
