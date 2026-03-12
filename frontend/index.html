@@ -1095,7 +1095,10 @@
     // --- STATE ---
     let currentPatientId = "";
     let patientToDeleteId = "";
-    const API = "http://localhost:5000";
+    // Automatically detect backend URL depending on if running locally or deployed
+    const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? 'http://localhost:5000' 
+      : '';
 
     // --- TOAST SYSTEM ---
     function showToast(message, type = "success") {

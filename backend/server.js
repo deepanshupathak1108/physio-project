@@ -13,6 +13,10 @@ app.use(express.json());
 // ===== STATIC FOLDER =====
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Serve the frontend statically with an absolute path
+const frontendPath = path.join(__dirname, '..', 'frontend');
+app.use(express.static(frontendPath));
+
 // ===== DB CONNECT =====
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/physio';
 mongoose.connect(MONGO_URI, {
@@ -211,6 +215,11 @@ app.delete('/reset-revenue', async (req, res) => {
   } catch (e) {
     res.status(500).send({ message: "Failed to reset" });
   }
+});
+
+// Catch-all route to serve the frontend index.html for any remaining undefined GET requests
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 // ===== START =====
